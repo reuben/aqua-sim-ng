@@ -73,7 +73,7 @@ AquaSimRangePropagation::Initialize()
 /**
 * only nodes within range will receive a copy
 */
-std::vector<PktRecvUnit> *
+std::vector<PktRecvUnit>
 AquaSimRangePropagation::ReceivedCopies (Ptr<AquaSimNetDevice> s,
                Ptr<Packet> p,
                std::vector<Ptr<AquaSimNetDevice> > dList)
@@ -81,7 +81,7 @@ AquaSimRangePropagation::ReceivedCopies (Ptr<AquaSimNetDevice> s,
   NS_LOG_FUNCTION(this << dList.size());
   NS_ASSERT(dList.size());
 
-	std::vector<PktRecvUnit> * res = new std::vector<PktRecvUnit>;
+	std::vector<PktRecvUnit> res;
 	//find all nodes which will receive a copy
 	PktRecvUnit pru;
 	double dist = 0;
@@ -108,7 +108,7 @@ AquaSimRangePropagation::ReceivedCopies (Ptr<AquaSimNetDevice> s,
 		pru.recver = dList[i];
 		pru.pDelay = Time::FromDouble(dist / AcousticSpeed(std::fabs(recvModel->GetPosition().z - senderModel->GetPosition().z)),Time::S);
 		pru.pR = RayleighAtt(dist, pstamp.GetFreq(), pstamp.GetPt());
-		res->push_back(pru);
+		res.push_back(pru);
 
     NS_LOG_DEBUG("AquaSimRangePropagation::ReceivedCopies: Sender("
     << s->GetAddress() << ") Recv(" << (pru.recver)->GetAddress()

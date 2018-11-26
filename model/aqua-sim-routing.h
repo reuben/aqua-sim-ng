@@ -71,6 +71,9 @@ public:
 
   virtual int64_t AssignStreams (int64_t stream) = 0;
 
+  size_t totalSent;
+  size_t totalRecvd;
+
 protected:
   /*send packet up to port-demux*/
   virtual bool SendUp(Ptr<Packet> p);			//demux not implemented yet.
@@ -99,6 +102,7 @@ protected:
   void NotifyTx(std::string path, Ptr<Packet> p, AquaSimAddress nextHop, Time delay);
 
   virtual void DoDispose();
+
 protected:
   //AquaSimAddress m_myAddr;  //the ip address of this node
   Ptr<AquaSimNetDevice> m_device;

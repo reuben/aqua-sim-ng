@@ -75,7 +75,7 @@ AquaSimRouting::GetTypeId(void)
 }
 
 AquaSimRouting::AquaSimRouting() :
-  trafficPktsTrace(0), trafficBytesTrace(0), m_sendUpPktCount(0)
+  trafficPktsTrace(0), trafficBytesTrace(0), m_sendUpPktCount(0), totalRecvd(0), totalSent(0)
 {
   m_data.clear(); //just in case.
   NS_LOG_FUNCTION(this);
@@ -143,6 +143,7 @@ AquaSimRouting::SendUp(Ptr<Packet> p)
     NOTE: AquaSimPhyCmn::SendPktUp()
   */
   m_routingRxCbTrace(p);
+  totalRecvd++;
   return true;
 }
 
@@ -193,6 +194,7 @@ void
 AquaSimRouting::SendPacket(Ptr<Packet> p)
 {
   NS_LOG_FUNCTION(this << m_mac);
+  totalSent++;
   m_routingTxCbTrace(p);
   if (!m_mac->TxProcess(p))
     NS_LOG_DEBUG(this << "Mac recv error");

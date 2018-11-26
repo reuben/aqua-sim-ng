@@ -113,6 +113,8 @@ public:
 
   virtual int64_t AssignStreams (int64_t stream) = 0;
 
+  bool m_on;
+
 private:
   // to receive packet from upper layer and lower layer
   //we hide this interface and demand derived classes to

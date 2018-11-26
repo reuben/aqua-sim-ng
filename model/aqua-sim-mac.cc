@@ -79,7 +79,7 @@ AquaSimMac::GetTypeId(void)
 }
 
 AquaSimMac::AquaSimMac() :
-  m_bitRate(1e4)/*10kbps*/, m_encodingEfficiency(1)
+  m_bitRate(1e4)/*10kbps*/, m_encodingEfficiency(1), m_on(false)
 {
 }
 
@@ -249,7 +249,9 @@ void
 AquaSimMac::PowerOn()
 {
   NS_LOG_FUNCTION(this);
-  Phy()->PowerOn();
+  if (!m_on)
+    Phy()->PowerOn();
+  m_on = true;
 }
 
 double
@@ -262,7 +264,9 @@ void
 AquaSimMac::PowerOff()
 {
   NS_LOG_FUNCTION(this);
-  Phy()->PowerOff();
+  if (m_on)
+    Phy()->PowerOff();
+  m_on = false;
 }
 
 /**

@@ -29,7 +29,7 @@
 #include "ns3/packet.h"
 
 #include <queue>
-#include <map>
+#include <unordered_map>
 #include <math.h>
 
 
@@ -117,7 +117,7 @@ protected:
   double m_dataTxTime;
   double m_AckTxTime;
 
-  std::map<long, AquaSimAlohaAckRetry*> RetryTimerMap_;   //map timer id to the corresponding pointer
+  std::unordered_map<long, AquaSimAlohaAckRetry*> RetryTimerMap_;   //map timer id to the corresponding pointer
 
   EventId m_statusEvent;
   EventId m_forwardEvent;

@@ -57,7 +57,7 @@ class AquaSimPropagation : public Object
 public:
   static TypeId GetTypeId (void);
 
-  virtual std::vector<PktRecvUnit> * ReceivedCopies (Ptr<AquaSimNetDevice> s,
+  virtual std::vector<PktRecvUnit> ReceivedCopies (Ptr<AquaSimNetDevice> s,
                                                      Ptr<Packet> p,
 						     std::vector<Ptr<AquaSimNetDevice> > dList) = 0;
   virtual Time PDelay (Ptr<MobilityModel> s, Ptr<MobilityModel> r);

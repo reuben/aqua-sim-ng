@@ -104,10 +104,10 @@ AquaSimFloodingRouting::Recv(Ptr<Packet> packet, const Address &dest, uint16_t p
   std::cout << "\n";*/
 
 	// Packet Hash Table is used to keep info about experienced pkts.
-  vbf_neighborhood *hashPtr= PktTable.GetHash(vbh.GetSenderAddr(), packet->GetUid());
-	// Received this packet before ?
+  vbf_neighborhood nb;
+  bool found = PktTable.GetHash(vbh.GetSenderAddr(), packet->GetUid(), nb);
 
-	if (hashPtr != NULL) {
+	if (found) {
     packet=0;
     return false;
   }

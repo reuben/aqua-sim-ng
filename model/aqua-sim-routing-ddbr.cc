@@ -212,7 +212,8 @@ NS_LOG_DEBUG("Expired node depth :"<<model->GetPosition().z <<" id: "<<ash.GetUI
     }
   }
   // Packet Hash Table is used to keep info about experienced pkts.
-  vbf_neighborhood *hashPtr= PktTable.GetHash(vbh.GetSenderAddr(), packet->GetUid());
+  vbf_neighborhood nb;
+  bool found = PktTable.GetHash(vbh.GetSenderAddr(), packet->GetUid(), nb);
   double delays = 1;
   // m_pq.print();
 
@@ -225,7 +226,7 @@ NS_LOG_DEBUG("Expired node depth :"<<model->GetPosition().z <<" id: "<<ash.GetUI
   NS_LOG_DEBUG(" vbh-mess:"<<vbh.GetMessType()<<" vbh-data:"<<vbh.GetDataType());
 
   // // Received this packet before ?
-  if ((hashPtr != NULL)){
+  if (found) {
     NS_LOG_DEBUG("Already in list, rcvd before");
     if (model->GetPosition().z < dep)
       {

@@ -436,7 +436,7 @@ void AquaSimAloha::DoDispose()
 		PktQ_.front()=0;
 		PktQ_.pop();
 	}
-  for (std::map<long,AquaSimAlohaAckRetry*>::iterator it=RetryTimerMap_.begin(); it!=RetryTimerMap_.end(); ++it) {
+  for (auto it=RetryTimerMap_.begin(); it!=RetryTimerMap_.end(); ++it) {
 		delete it->second;
 		it->second=0;
 	}

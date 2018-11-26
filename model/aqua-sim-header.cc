@@ -77,7 +77,7 @@ uint32_t
 AquaSimHeader::Deserialize(Buffer::Iterator start)
 {
   Buffer::Iterator i = start;
-  m_txTime = Seconds ( ( (double) i.ReadU32 ()) / 1000.0 );
+  m_txTime = Time(((double)i.ReadU32()) * 1000000.0);
   m_size = i.ReadU16();
   m_direction = i.ReadU8();
   m_numForwards = i.ReadU16();
@@ -86,7 +86,7 @@ AquaSimHeader::Deserialize(Buffer::Iterator start)
   m_dst.addr = (AquaSimAddress) i.ReadU16();
   m_errorFlag = i.ReadU8();	//wasted space due to only needing 1 bit
   m_uId = i.ReadU16();
-  m_timestamp = Seconds ( ( (double) i.ReadU32 ()) / 1000.0 );
+  m_timestamp = Time(((double)i.ReadU32()) * 1000000.0);
 
   return GetSerializedSize();
 }
@@ -107,7 +107,7 @@ void
 AquaSimHeader::Serialize(Buffer::Iterator start) const
 {
   Buffer::Iterator i = start;
-  i.WriteU32((uint32_t)(m_txTime.GetSeconds() * 1000.0));
+  i.WriteU32((uint32_t)(m_txTime.GetDouble() / 1000000.0));
   i.WriteU16(m_size);
   i.WriteU8(m_direction);
   i.WriteU16(m_numForwards);
@@ -117,7 +117,7 @@ AquaSimHeader::Serialize(Buffer::Iterator start) const
   i.WriteU8(m_errorFlag);
   i.WriteU16(m_uId);
   //src/dst port
-  i.WriteU32((uint32_t)(m_timestamp.GetSeconds()*1000.0 + 0.5));
+  i.WriteU32((uint32_t)((m_timestamp.GetDouble() / 1000000.0) + 0.5));
 }
 
 void

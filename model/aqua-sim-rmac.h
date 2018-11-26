@@ -290,7 +290,7 @@ public:
   struct reservation_record reservation_table[R_TABLE_SIZE];
   struct reservation_record next_available_table[R_TABLE_SIZE];
   struct ackdata_record ackdata_table[R_TABLE_SIZE];
-  struct Ptr<buffer_cell> ack_rev_pt;// pointer to the link of ack_rev
+  Ptr<buffer_cell> ack_rev_pt;// pointer to the link of ack_rev
 
   void InitPhaseOne(double NDwindow, double ackNDwindow, double phaseOneWindow);
 

@@ -160,28 +160,21 @@ AquaSimChannel::SendUp (Ptr<Packet> p, Ptr<AquaSimPhy> tifp)
   }
   */
 
-  std::vector<PktRecvUnit> * recvUnits = m_prop->ReceivedCopies(sender, p, m_deviceList);
+  std::vector<PktRecvUnit> recvUnits = m_prop->ReceivedCopies(sender, p, m_deviceList);
 
   allPktCounter++;  //Debug... remove
-  for (std::vector<PktRecvUnit>::size_type i = 0; i < recvUnits->size(); i++) {
+  for (std::vector<PktRecvUnit>::size_type i = 0; i < recvUnits.size(); i++) {
     allRecvPktCounter++;  //Debug .. remove
-    if (sender == (*recvUnits)[i].recver)
+    if (sender == recvUnits[i].recver)
     {
       continue;
     }
 
-    //TODO remove ... this is a local addition for flooding_test.
-    if (FLOODING_TEST && (Distance(sender, (*recvUnits)[i].recver) > Distance((*recvUnits)[0].recver,(*recvUnits)[1].recver)*1.25/*arbitrary*/))
-      {
-        NS_LOG_DEBUG("Channel:SendUp: FloodTest(OutOfRange): sender(" << sender->GetAddress() << ") recver:(" <<  (*recvUnits)[i].recver->GetAddress() << ") dist(" << Distance(sender, (*recvUnits)[i].recver) << ")");
-        continue;
-      }
-
     sentPktCounter++; //Debug... remove
 
-    recver = (*recvUnits)[i].recver;
-    pDelay = GetPropDelay(sender, (*recvUnits)[i].recver);
-    //pDelay = (*recvUnits)[i].pDelay;
+    recver = recvUnits[i].recver;
+    pDelay = GetPropDelay(sender, recvUnits[i].recver);
+    //pDelay = recvUnits[i].pDelay;
     rifp = recver->GetPhy();
     //rifp = recver->ifhead().lh_first;
 
@@ -190,7 +183,7 @@ AquaSimChannel::SendUp (Ptr<Packet> p, Ptr<AquaSimPhy> tifp)
     p->RemoveHeader(pstamp);
     p->RemoveHeader(asHeader);
 
-    pstamp.SetPr((*recvUnits)[i].pR);
+    pstamp.SetPr(recvUnits[i].pR);
     pstamp.SetNoise(m_noiseGen->Noise((Simulator::Now() + pDelay), (GetMobilityModel(recver)->GetPosition())));
     asHeader.SetDirection(AquaSimHeader::UP);
     asHeader.SetTxTime(pDelay);
@@ -202,8 +195,8 @@ AquaSimChannel::SendUp (Ptr<Packet> p, Ptr<AquaSimPhy> tifp)
      * Send to each interface a copy, and we will filter the packet
      * in physical layer according to freq and modulation
      */
-    NS_LOG_DEBUG ("Channel. NodeS:" << sender->GetAddress() << " NodeR:" << recver->GetAddress() << " S.Phy:" << sender->GetPhy() << " R.Phy:" << recver->GetPhy() << " packet:" << p
-		  << " TxTime:" << asHeader.GetTxTime() << pDelay);
+    // NS_LOG_DEBUG ("Channel. NodeS:" << sender->GetAddress() << " NodeR:" << recver->GetAddress() << " S.Phy:" << sender->GetPhy() << " R.Phy:" << recver->GetPhy() << " packet:" << p
+		  // << " TxTime:" << asHeader.GetTxTime() << pDelay);
 
     Simulator::Schedule(pDelay, &AquaSimPhy::Recv, rifp, p->Copy());
 
@@ -218,7 +211,6 @@ AquaSimChannel::SendUp (Ptr<Packet> p, Ptr<AquaSimPhy> tifp)
   }
 
   p = 0; //smart pointer will unref automatically once out of scope
-  delete recvUnits;
   return true;
 }
 

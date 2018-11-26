@@ -29,9 +29,29 @@
 #include "ns3/random-variable-stream.h"
 #include "ns3/packet.h"
 
-#include <map>
+#include <unordered_map>
+
 
 namespace ns3 {
+
+// struct addr_uint_hash {
+struct addr_hash {
+  // size_t hash_addr(const ns3::AquaSimAddress& a) const {
+  size_t operator()(const ns3::AquaSimAddress& a) const {
+    uint8_t buf[2];
+    a.CopyTo(buf);
+    auto h1 = std::hash<uint8_t>{}(buf[0]);
+    auto h2 = std::hash<uint8_t>{}(buf[1]);
+    return h1 ^ (h2 + 0x9e3779b9 + (h1<<6) + (h2>>2));
+  }
+
+  // size_t operator()(const std::pair<ns3::AquaSimAddress, unsigned int> &p) const {
+  //   auto h1 = hash_addr(p.first);
+  //   auto h2 = std::hash<unsigned int>{}(p.second);
+
+  //   return h1 ^ (h2 + 0x9e3779b9 + (h1<<6) + (h2>>2));
+  // }
+};
 
 class VBHeader;
 
@@ -41,6 +61,7 @@ struct vbf_neighborhood{
 };
 
 typedef std::pair<AquaSimAddress, unsigned int> hash_entry;
+typedef std::unordered_map<ns3::AquaSimAddress, std::unordered_map<unsigned int, vbf_neighborhood>, addr_hash> table_type;
 
 /**
  * \ingroup aqua-sim-ng
@@ -49,7 +70,7 @@ typedef std::pair<AquaSimAddress, unsigned int> hash_entry;
  */
 class AquaSimPktHashTable {
 public:
-  std::map<hash_entry,vbf_neighborhood*> m_htable;
+  table_type m_htable;
   //std::map<hash_t, hash_entry> m_htable;
 
   AquaSimPktHashTable();
@@ -59,7 +80,7 @@ public:
   void Reset();
   void PutInHash(AquaSimAddress sAddr, unsigned int pkNum);
   void PutInHash(AquaSimAddress sAddr, unsigned int pkNum, Vector p);
-  vbf_neighborhood* GetHash(AquaSimAddress senderAddr, unsigned int pkt_num);
+  bool GetHash(AquaSimAddress senderAddr, unsigned int pkt_num, vbf_neighborhood& ret);
 //private:
 //int lower_counter;
 };  // class AquaSimPktHashTable

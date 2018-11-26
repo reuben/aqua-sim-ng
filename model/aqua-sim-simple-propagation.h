@@ -41,7 +41,7 @@ public:
   AquaSimSimplePropagation (void);
   ~AquaSimSimplePropagation (void);
 
-  virtual std::vector<PktRecvUnit> * ReceivedCopies (Ptr<AquaSimNetDevice> s,
+  virtual std::vector<PktRecvUnit> ReceivedCopies (Ptr<AquaSimNetDevice> s,
 						     Ptr<Packet> p,
 						     std::vector<Ptr<AquaSimNetDevice> > dList);
 
